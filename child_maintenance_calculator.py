@@ -79,7 +79,7 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     min_maintenance = base_maintenance * 0.75  # Adjusted to 75%
     max_maintenance = base_maintenance * 1.25  # Adjusted to 125%
 
-    return round(min_maintenance), round(max_maintenance), round(total_income)
+    return round(min_maintenance), round(max_maintenance)
 
 # Streamlit UI
 st.title("Child Maintenance Calculator")
@@ -105,19 +105,28 @@ if st.sidebar.button("Calculate"):
         if not valid_children_ages:
             st.error("No eligible children provided. Please check the ages entered.")
         else:
-            min_maintenance, max_maintenance, total_income = calculate_child_maintenance(
+            min_maintenance, max_maintenance = calculate_child_maintenance(
                 father_income, mother_income, valid_children_ages
             )
 
             st.write("### Predicted Maintenance Range:")
             st.write(f"**Minimum Monthly Maintenance:** ${min_maintenance}")
             st.write(f"**Maximum Monthly Maintenance:** ${max_maintenance}")
-            st.write(f"**Total Income:** ${total_income}")
 
             st.markdown("**Disclaimer:** The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
 
+            # Add a feedback section for user evaluation
+            st.write("### Is the Predicted Maintenance Acceptable?")
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("👍 Yes"):
+                    st.success("Thank you for your feedback! We're glad the prediction met your expectations.")
+            with col2:
+                if st.button("👎 No"):
+                    st.warning("Thank you for your feedback! We'll use this to improve our predictions.")
+
             # Add a download button for results
-            download_data = f"Minimum Monthly Maintenance: ${min_maintenance}\nMaximum Monthly Maintenance: ${max_maintenance}\nTotal Income: ${total_income}\nDisclaimer: The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance."
+            download_data = f"Minimum Monthly Maintenance: ${min_maintenance}\nMaximum Monthly Maintenance: ${max_maintenance}\nDisclaimer: The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance."
 
             st.download_button(
                 label="Download Results",
