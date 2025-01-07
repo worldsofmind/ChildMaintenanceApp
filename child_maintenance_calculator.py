@@ -29,10 +29,10 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
 
     # Prepare input for prediction
     input_data = pd.DataFrame({
-        'Father's income (Processed)': [father_income],
-        'Mother's income (Processed)': [mother_income],
-        'No. of children of the marriage': [num_children],
-        'Weighted Child Age': [weighted_child_age]
+        "Father's income (Processed)": [father_income],
+        "Mother's income (Processed)": [mother_income],
+        "No. of children of the marriage": [num_children],
+        "Weighted Child Age": [weighted_child_age]
     })
 
     # Normalize inputs using scaler
@@ -107,3 +107,4 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
