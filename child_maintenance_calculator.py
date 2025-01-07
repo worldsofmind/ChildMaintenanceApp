@@ -75,8 +75,8 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     income_proportion = total_income * 0.1  # Assume 10% of income as max range
     base_maintenance = max(100, min(base_maintenance, income_proportion))
 
-    # Define a wider range for predictions (adjusting the range to 15% - 25%)
-    min_maintenance = base_maintenance * 0.85  # Adjusted to 85%
+    # Define a wider range for predictions (adjusting the min range down by 25% and max up by 25%)
+    min_maintenance = base_maintenance * 0.75  # Adjusted to 75%
     max_maintenance = base_maintenance * 1.25  # Adjusted to 125%
 
     return round(min_maintenance), round(max_maintenance), round(total_income)
