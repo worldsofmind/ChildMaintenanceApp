@@ -99,6 +99,7 @@ for i in range(int(num_children)):
 
 if "results" not in st.session_state:
     st.session_state["results"] = None
+    st.session_state["feedback"] = None
 
 if st.sidebar.button("Calculate"):
     try:
@@ -115,6 +116,7 @@ if st.sidebar.button("Calculate"):
                 "min_maintenance": min_maintenance,
                 "max_maintenance": max_maintenance
             }
+            st.session_state["feedback"] = None  # Reset feedback on new calculation
     except ValueError as e:
         st.error(f"Input Error: {e}")
 
@@ -129,8 +131,6 @@ if st.session_state["results"]:
 
     # Add a feedback section for user evaluation with persistence
     st.write("### Is the Predicted Maintenance Acceptable?")
-    if "feedback" not in st.session_state:
-        st.session_state["feedback"] = None
 
     col1, col2 = st.columns(2)
     if st.session_state["feedback"] == "👍":
