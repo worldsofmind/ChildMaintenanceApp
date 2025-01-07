@@ -28,7 +28,7 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     min_maintenance = sum(low_amounts)
     max_maintenance = sum(high_amounts)
 
-    return round(min_maintenance, 2), round(max_maintenance, 2), total_income, low_percentage, high_percentage
+    return round(min_maintenance, 2), round(max_maintenance, 2), total_income
 
 # Streamlit UI
 st.title("Child Maintenance Calculator")
@@ -53,7 +53,7 @@ if st.sidebar.button("Calculate"):
         if not children_ages:
             st.error("No eligible children provided. Please check the ages entered.")
         else:
-            min_maintenance, max_maintenance, total_income, low_percentage, high_percentage = calculate_child_maintenance(
+            min_maintenance, max_maintenance, total_income = calculate_child_maintenance(
                 father_income, mother_income, children_ages
             )
 
@@ -61,10 +61,11 @@ if st.sidebar.button("Calculate"):
             st.write(f"**Minimum Monthly Maintenance:** ${min_maintenance}")
             st.write(f"**Maximum Monthly Maintenance:** ${max_maintenance}")
             st.write(f"**Total Income:** ${total_income}")
-            st.write(f"**Percentage Range for Maintenance:** {low_percentage * 100}% - {high_percentage * 100}%")
+            
+            st.markdown("**Disclaimer:** The calculated maintenance range is an estimate and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
 
             # Optional: Add a download button for results
-            download_data = f"Minimum Monthly Maintenance: ${min_maintenance}\nMaximum Monthly Maintenance: ${max_maintenance}\nTotal Income: ${total_income}\nPercentage Range for Maintenance: {low_percentage * 100}% - {high_percentage * 100}%"
+            download_data = f"Minimum Monthly Maintenance: ${min_maintenance}\nMaximum Monthly Maintenance: ${max_maintenance}\nTotal Income: ${total_income}\nDisclaimer: The calculated maintenance range is an estimate and should not be considered as legal or financial advice. Consult a professional for accurate guidance."
 
             st.download_button(
                 label="Download Results",
