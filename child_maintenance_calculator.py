@@ -99,6 +99,7 @@ for i in range(int(num_children)):
 
 if "results" not in st.session_state:
     st.session_state["results"] = None
+if "feedback" not in st.session_state:
     st.session_state["feedback"] = None
 
 if st.sidebar.button("Calculate"):
@@ -133,19 +134,20 @@ if st.session_state["results"]:
     st.write("### Is the Predicted Maintenance Acceptable?")
 
     col1, col2 = st.columns(2)
-    if st.session_state["feedback"] == "👍":
-        col1.button("👍 Yes", disabled=True)
-        col1.success("Thank you for your feedback! We're glad the prediction met your expectations.")
-    else:
-        if col1.button("👍 Yes"):
-            st.session_state["feedback"] = "👍"
-
-    if st.session_state["feedback"] == "👎":
-        col2.button("👎 No", disabled=True)
-        col2.warning("Thank you for your feedback! We'll use this to improve our predictions.")
-    else:
-        if col2.button("👎 No"):
-            st.session_state["feedback"] = "👎"
+    with col1:
+        if st.session_state["feedback"] == "👍":
+            st.button("👍 Yes", disabled=True)
+            st.success("Thank you for your feedback! We're glad the prediction met your expectations.")
+        else:
+            if st.button("👍 Yes"):
+                st.session_state["feedback"] = "👍"
+    with col2:
+        if st.session_state["feedback"] == "👎":
+            st.button("👎 No", disabled=True)
+            st.warning("Thank you for your feedback! We'll use this to improve our predictions.")
+        else:
+            if st.button("👎 No"):
+                st.session_state["feedback"] = "👎"
 
 # Additional styling for the feedback buttons
 st.markdown(
