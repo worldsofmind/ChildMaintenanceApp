@@ -71,8 +71,11 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     # Predict maintenance using Gradient Boosting
     base_maintenance = gb_model.predict(input_data_scaled)[0]
 
-    # Apply scaling and limits to predictions
-    base_maintenance = max(100, min(base_maintenance, 1000))  # Limit predictions to realistic range
+    # Apply dynamic scaling based on income
+    income_proportion = total_income * 0.1  # Assume 10% of income as max range
+    base_maintenance = max(100, min(base_maintenance, income_proportion))
+
+    # Define a range for predictions
     min_maintenance = base_maintenance * 0.9
     max_maintenance = base_maintenance * 1.1
 
