@@ -45,14 +45,14 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     min_maintenance = base_maintenance * 0.9
     max_maintenance = base_maintenance * 1.1
 
-    return round(min_maintenance, 2), round(max_maintenance, 2), total_income
+    return round(min_maintenance), round(max_maintenance), round(total_income)
 
 # Streamlit UI
 st.title("Child Maintenance Calculator")
 
 st.sidebar.header("Input Parameters")
-father_income = st.sidebar.number_input("Father's Monthly Income ($)", min_value=0.0, step=100.0, help="Enter the father's monthly income.")
-mother_income = st.sidebar.number_input("Mother's Monthly Income ($)", min_value=0.0, step=100.0, help="Enter the mother's monthly income.")
+father_income = st.sidebar.number_input("Father's Monthly Income ($)", min_value=0, step=100, format="%d", help="Enter the father's monthly income.")
+mother_income = st.sidebar.number_input("Mother's Monthly Income ($)", min_value=0, step=100, format="%d", help="Enter the mother's monthly income.")
 num_children = st.sidebar.number_input("Number of Eligible Children", min_value=1, step=1, help="Enter the number of children eligible for maintenance.")
 
 # Intuitive input for children's ages with validation
