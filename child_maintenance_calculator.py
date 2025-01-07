@@ -85,8 +85,8 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
 st.title("Child Maintenance Calculator")
 
 st.sidebar.header("Input Parameters")
-father_income = st.sidebar.number_input("Father's Monthly Income (<span class="math-inline">\)", min\_value\=0, step\=100, format\="%d", help\="Enter the father's monthly income\."\)
-mother\_income \= st\.sidebar\.number\_input\("Mother's Monthly Income \(</span>)", min_value=0, step=100, format="%d", help="Enter the mother's monthly income.")
+father_income = st.sidebar.number_input("Father's Monthly Income ($)", min_value=0, step=100, format="%d", help="Enter the father's monthly income.")
+mother_income = st.sidebar.number_input("Mother's Monthly Income ($)", min_value=0, step=100, format="%d", help="Enter the mother's monthly income.")
 num_children = st.sidebar.number_input("Number of Eligible Children", min_value=1, step=1, help="Enter the number of children eligible for maintenance.")
 
 # Intuitive input for children's ages with validation
@@ -137,26 +137,28 @@ if st.session_state["results"]:
     with col1:
         if st.session_state["feedback"] == "👍":
             st.success("Thank you for your feedback! We're glad the prediction met your expectations.")
-            st.button("👍 Yes", disabled=True, key="yes_button_1")  # Add unique key
         else:
-            if st.button("👍 Yes", key="yes_button_1"):  # Add unique key
+            if st.button("👍 Yes", key="yes_button"):
                 st.session_state["feedback"] = "👍"
-                st.success("Thank you for your feedback! We're glad the prediction met your expectations.")
-                st.button("👍 Yes", disabled=True, key="yes_button_1")  # Add unique key
 
     with col2:
         if st.session_state["feedback"] == "👎":
             st.warning("Thank you for your feedback! We'll use this to improve our predictions.")
-            st.button("👎 No", disabled=True, key="no_button_1")  # Add unique key
         else:
-            if st.button("👎 No", key="no_button_1"):  # Add unique key
+            if st.button("👎 No", key="no_button"):
                 st.session_state["feedback"] = "👎"
-                st.warning("Thank you for your feedback! We'll use this to improve our predictions.")
-                st.button("👎 No", disabled=True, key="no_button_1")  # Add unique key
 
 # Additional styling for the feedback buttons
 st.markdown(
     """
     <style>
         .stButton > button {
-            margin: 5px
+            margin: 5px 0;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
