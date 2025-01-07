@@ -136,18 +136,23 @@ if st.session_state["results"]:
     col1, col2 = st.columns(2)
     with col1:
         if st.session_state["feedback"] == "👍":
-            st.button("👍 Yes", disabled=True)
             st.success("Thank you for your feedback! We're glad the prediction met your expectations.")
+            st.button("👍 Yes", disabled=True)
         else:
             if st.button("👍 Yes"):
                 st.session_state["feedback"] = "👍"
+                st.success("Thank you for your feedback! We're glad the prediction met your expectations.")
+                st.button("👍 Yes", disabled=True) 
+
     with col2:
         if st.session_state["feedback"] == "👎":
-            st.button("👎 No", disabled=True)
             st.warning("Thank you for your feedback! We'll use this to improve our predictions.")
+            st.button("👎 No", disabled=True)
         else:
             if st.button("👎 No"):
                 st.session_state["feedback"] = "👎"
+                st.warning("Thank you for your feedback! We'll use this to improve our predictions.")
+                st.button("👎 No", disabled=True)
 
 # Additional styling for the feedback buttons
 st.markdown(
