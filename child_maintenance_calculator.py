@@ -115,44 +115,36 @@ if st.sidebar.button("Calculate"):
 
             st.markdown("**Disclaimer:** The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
 
-            # Add a feedback section for user evaluation
+            # Add a feedback section for user evaluation with persistence
             st.write("### Is the Predicted Maintenance Acceptable?")
+            feedback = st.session_state.get("feedback", None)
             col1, col2 = st.columns(2)
-            with col1:
-                if st.button("👍 Yes"):
-                    st.success("Thank you for your feedback! We're glad the prediction met your expectations.")
-            with col2:
-                if st.button("👎 No"):
-                    st.warning("Thank you for your feedback! We'll use this to improve our predictions.")
 
-            # Add a download button for results
-            download_data = f"Minimum Monthly Maintenance: ${min_maintenance}\nMaximum Monthly Maintenance: ${max_maintenance}\nDisclaimer: The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance."
+            if feedback == "👍":
+                col1.button("👍 Yes", disabled=True)
+                col1.success("Thank you for your feedback! We're glad the prediction met your expectations.")
+            else:
+                if col1.button("👍 Yes"):
+                    st.session_state["feedback"] = "👍"
 
-            st.download_button(
-                label="Download Results",
-                data=download_data,
-                file_name="child_maintenance_results.txt",
-                mime="text/plain"
-            )
+            if feedback == "👎":
+                col2.button("👎 No", disabled=True)
+                col2.warning("Thank you for your feedback! We'll use this to improve our predictions.")
+            else:
+                if col2.button("👎 No"):
+                    st.session_state["feedback"] = "👎"
     except ValueError as e:
         st.error(f"Input Error: {e}")
 
-# Additional styling for the download button
+# Additional styling for the feedback buttons
 st.markdown(
     """
     <style>
-        .stDownloadButton > button {
-            background-color: #4CAF50; /* Green */
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
+        .stButton > button {
+            margin: 5px 0;
             border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
         }
     </style>
     """,
