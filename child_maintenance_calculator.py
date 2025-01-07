@@ -39,9 +39,13 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     input_data_scaled = scaler.transform(input_data)
 
     # Predict maintenance using Ridge Regression
-    predicted_maintenance = ridge_model.predict(input_data_scaled)[0]
+    base_maintenance = ridge_model.predict(input_data_scaled)[0]
 
-    return round(predicted_maintenance, 2), total_income
+    # Calculate a range for min and max maintenance (e.g., +/- 10%)
+    min_maintenance = base_maintenance * 0.9
+    max_maintenance = base_maintenance * 1.1
+
+    return round(min_maintenance, 2), round(max_maintenance, 2), total_income
 
 # Streamlit UI
 st.title("Child Maintenance Calculator")
@@ -67,18 +71,19 @@ if st.sidebar.button("Calculate"):
         if not valid_children_ages:
             st.error("No eligible children provided. Please check the ages entered.")
         else:
-            predicted_maintenance, total_income = calculate_child_maintenance(
+            min_maintenance, max_maintenance, total_income = calculate_child_maintenance(
                 father_income, mother_income, valid_children_ages
             )
 
-            st.write("### Predicted Maintenance:")
-            st.write(f"**Predicted Monthly Maintenance:** ${predicted_maintenance}")
+            st.write("### Predicted Maintenance Range:")
+            st.write(f"**Minimum Monthly Maintenance:** ${min_maintenance}")
+            st.write(f"**Maximum Monthly Maintenance:** ${max_maintenance}")
             st.write(f"**Total Income:** ${total_income}")
 
-            st.markdown("**Disclaimer:** The predicted maintenance is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
+            st.markdown("**Disclaimer:** The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
 
             # Add a download button for results
-            download_data = f"Predicted Monthly Maintenance: ${predicted_maintenance}\nTotal Income: ${total_income}\nDisclaimer: The predicted maintenance is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance."
+            download_data = f"Minimum Monthly Maintenance: ${min_maintenance}\nMaximum Monthly Maintenance: ${max_maintenance}\nTotal Income: ${total_income}\nDisclaimer: The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance."
 
             st.download_button(
                 label="Download Results",
@@ -107,4 +112,3 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
