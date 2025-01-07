@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 
 # Function for calculating child maintenance
 def calculate_child_maintenance(father_income, mother_income, children_ages):
@@ -32,18 +31,6 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
 
 # Streamlit UI
 st.title("Child Maintenance Calculator")
-
-# Load processed data if available
-try:
-    uploaded_file = st.file_uploader("Upload processed dataset (optional):", type=['xlsx'])
-    if uploaded_file:
-        data = pd.ExcelFile(uploaded_file)
-        sheet_name = data.sheet_names[0]
-        processed_data = data.parse(sheet_name)
-        st.write("### Uploaded Processed Dataset:")
-        st.write(processed_data.head())
-except Exception as e:
-    st.warning(f"Error loading the dataset: {e}")
 
 st.sidebar.header("Input Parameters")
 father_income = st.sidebar.number_input("Father's Monthly Income ($)", min_value=0.0, step=100.0, help="Enter the father's monthly income.")
@@ -108,4 +95,3 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
