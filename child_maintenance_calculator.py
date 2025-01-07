@@ -1,29 +1,47 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import Ridge
+from sklearn.preprocessing import StandardScaler
 
-# Function for calculating child maintenance
+# Placeholder Ridge Regression model (replace with trained model)
+ridge_model = Ridge(alpha=1.0)
+ridge_model.coef_ = np.array([0.8, 1.2, -0.5, 2.5])  # Replace with actual coefficients
+ridge_model.intercept_ = 50  # Replace with actual intercept
+
+# Placeholder scaler (replace with actual scaler if used in training)
+scaler = StandardScaler()
+scaler.mean_ = np.array([100, 50, 3, 10])  # Replace with actual scaler mean
+scaler.scale_ = np.array([50, 30, 1, 5])  # Replace with actual scaler scale
+
+# Function for calculating child maintenance using Ridge Regression
 def calculate_child_maintenance(father_income, mother_income, children_ages):
-    father_income = father_income or 0
-    mother_income = mother_income or 0
-
-    # Validate input values
     if father_income < 0 or mother_income < 0:
         raise ValueError("Income values cannot be negative.")
+    if not children_ages:
+        raise ValueError("No valid children ages provided.")
 
     total_income = father_income + mother_income
 
-    low_total = total_income * 0.06  # 6% of total income for all children
-    high_total = total_income * 0.08  # 8% of total income for all children
+    # Feature engineering
+    num_children = len(children_ages)
+    weighted_child_age = np.mean([1.2 if age < 10 else 1.0 if age < 18 else 0.8 for age in children_ages])
 
-    # Calculate per-child maintenance with age weights
-    age_weights = [1.2 if age < 10 else 1.0 if age < 18 else 0.8 for age in children_ages]
-    low_amounts = [(low_total * weight) / len(children_ages) for weight in age_weights]
-    high_amounts = [(high_total * weight) / len(children_ages) for weight in age_weights]
+    # Prepare input for prediction
+    input_data = pd.DataFrame({
+        'Father's income (Processed)': [father_income],
+        'Mother's income (Processed)': [mother_income],
+        'No. of children of the marriage': [num_children],
+        'Weighted Child Age': [weighted_child_age]
+    })
 
-    # Calculate total maintenance
-    min_maintenance = sum(low_amounts)
-    max_maintenance = sum(high_amounts)
+    # Normalize inputs using scaler
+    input_data_scaled = scaler.transform(input_data)
 
-    return round(min_maintenance, 2), round(max_maintenance, 2), total_income
+    # Predict maintenance using Ridge Regression
+    predicted_maintenance = ridge_model.predict(input_data_scaled)[0]
+
+    return round(predicted_maintenance, 2), total_income
 
 # Streamlit UI
 st.title("Child Maintenance Calculator")
@@ -38,29 +56,29 @@ children_ages = []
 st.sidebar.write("Enter the ages of each child:")
 for i in range(int(num_children)):
     age = st.sidebar.number_input(f"Age of Child {i + 1}", min_value=0, max_value=21, step=1, help=f"Enter the age of child {i + 1}.")
-    if age > 21:
-        st.sidebar.warning(f"Child {i + 1}'s age exceeds the eligibility limit of 21 years. This child will be excluded.")
-    else:
+    if age <= 21:  # Only include eligible children
         children_ages.append(age)
 
 if st.sidebar.button("Calculate"):
     try:
-        if not children_ages:
+        # Exclude ineligible ages
+        valid_children_ages = [age for age in children_ages if age <= 21]
+
+        if not valid_children_ages:
             st.error("No eligible children provided. Please check the ages entered.")
         else:
-            min_maintenance, max_maintenance, total_income = calculate_child_maintenance(
-                father_income, mother_income, children_ages
+            predicted_maintenance, total_income = calculate_child_maintenance(
+                father_income, mother_income, valid_children_ages
             )
 
-            st.write(f"### Monthly Maintenance Range:")
-            st.write(f"**Minimum Monthly Maintenance:** ${min_maintenance}")
-            st.write(f"**Maximum Monthly Maintenance:** ${max_maintenance}")
+            st.write("### Predicted Maintenance:")
+            st.write(f"**Predicted Monthly Maintenance:** ${predicted_maintenance}")
             st.write(f"**Total Income:** ${total_income}")
-            
-            st.markdown("**Disclaimer:** The calculated maintenance range is an estimate and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
 
-            # Optional: Add a download button for results
-            download_data = f"Minimum Monthly Maintenance: ${min_maintenance}\nMaximum Monthly Maintenance: ${max_maintenance}\nTotal Income: ${total_income}\nDisclaimer: The calculated maintenance range is an estimate and should not be considered as legal or financial advice. Consult a professional for accurate guidance."
+            st.markdown("**Disclaimer:** The predicted maintenance is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
+
+            # Add a download button for results
+            download_data = f"Predicted Monthly Maintenance: ${predicted_maintenance}\nTotal Income: ${total_income}\nDisclaimer: The predicted maintenance is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance."
 
             st.download_button(
                 label="Download Results",
