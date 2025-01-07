@@ -117,26 +117,23 @@ if st.sidebar.button("Calculate"):
         st.error(f"Input Error: {e}")
 
 # Additional styling for the download button
-st.markdown("""
-<style>
-    .stDownloadButton > button {
-        background-color: #4CAF50; /* Green */
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-        cursor: pointer;
-        border-radius: 5px;
-    }
-</style>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+        .stDownloadButton > button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
