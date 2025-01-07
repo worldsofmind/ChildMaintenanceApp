@@ -1,20 +1,42 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import Ridge
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error
 
-# Placeholder Ridge Regression model (replace with trained model)
-ridge_model = Ridge(alpha=1.0)
-ridge_model.coef_ = np.array([0.8, 1.2, -0.5, 2.5])  # Replace with actual coefficients
-ridge_model.intercept_ = 50  # Replace with actual intercept
+# Sample data for training (replace this with actual dataset)
+data = {
+    "Father's income (Processed)": [4000, 5000, 6000, 7000, 8000],
+    "Mother's income (Processed)": [3000, 4000, 5000, 6000, 7000],
+    "No. of children of the marriage": [1, 2, 3, 4, 2],
+    "Weighted Child Age": [8.5, 10.2, 12.3, 14.5, 9.8],
+    "Actual Maintenance": [600, 800, 1000, 1200, 900]
+}
+df = pd.DataFrame(data)
 
-# Placeholder scaler (replace with actual scaler if used in training)
+# Features and target
+X = df[["Father's income (Processed)", "Mother's income (Processed)", "No. of children of the marriage", "Weighted Child Age"]]
+y = df["Actual Maintenance"]
+
+# Normalize features
 scaler = StandardScaler()
-scaler.mean_ = np.array([100, 50, 3, 10])  # Replace with actual scaler mean
-scaler.scale_ = np.array([50, 30, 1, 5])  # Replace with actual scaler scale
+X_scaled = scaler.fit_transform(X)
 
-# Function for calculating child maintenance using Ridge Regression
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# Train the Gradient Boosting model
+gb_model = GradientBoostingRegressor(random_state=42)
+gb_model.fit(X_train, y_train)
+
+# Evaluate the model
+y_pred = gb_model.predict(X_test)
+mae = mean_absolute_error(y_test, y_pred)
+print(f"Mean Absolute Error: {mae}")
+
+# Function for calculating child maintenance using Gradient Boosting
 def calculate_child_maintenance(father_income, mother_income, children_ages):
     if father_income < 0 or mother_income < 0:
         raise ValueError("Income values cannot be negative.")
@@ -38,8 +60,8 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     # Normalize inputs using scaler
     input_data_scaled = scaler.transform(input_data)
 
-    # Predict maintenance using Ridge Regression
-    base_maintenance = ridge_model.predict(input_data_scaled)[0]
+    # Predict maintenance using Gradient Boosting
+    base_maintenance = gb_model.predict(input_data_scaled)[0]
 
     # Calculate a range for min and max maintenance (e.g., +/- 10%)
     min_maintenance = base_maintenance * 0.9
@@ -107,6 +129,12 @@ st.markdown("""
         display: inline-block;
         font-size: 16px;
         margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
         cursor: pointer;
         border-radius: 5px;
     }
