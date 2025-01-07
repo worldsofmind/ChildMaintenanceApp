@@ -97,6 +97,9 @@ for i in range(int(num_children)):
     if age <= 21:  # Only include eligible children
         children_ages.append(age)
 
+if "results" not in st.session_state:
+    st.session_state["results"] = None
+
 if st.sidebar.button("Calculate"):
     try:
         # Exclude ineligible ages
@@ -108,33 +111,41 @@ if st.sidebar.button("Calculate"):
             min_maintenance, max_maintenance = calculate_child_maintenance(
                 father_income, mother_income, valid_children_ages
             )
-
-            st.write("### Predicted Maintenance Range:")
-            st.write(f"**Minimum Monthly Maintenance:** ${min_maintenance}")
-            st.write(f"**Maximum Monthly Maintenance:** ${max_maintenance}")
-
-            st.markdown("**Disclaimer:** The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
-
-            # Add a feedback section for user evaluation with persistence
-            st.write("### Is the Predicted Maintenance Acceptable?")
-            feedback = st.session_state.get("feedback", None)
-            col1, col2 = st.columns(2)
-
-            if feedback == "👍":
-                col1.button("👍 Yes", disabled=True)
-                col1.success("Thank you for your feedback! We're glad the prediction met your expectations.")
-            else:
-                if col1.button("👍 Yes"):
-                    st.session_state["feedback"] = "👍"
-
-            if feedback == "👎":
-                col2.button("👎 No", disabled=True)
-                col2.warning("Thank you for your feedback! We'll use this to improve our predictions.")
-            else:
-                if col2.button("👎 No"):
-                    st.session_state["feedback"] = "👎"
+            st.session_state["results"] = {
+                "min_maintenance": min_maintenance,
+                "max_maintenance": max_maintenance
+            }
     except ValueError as e:
         st.error(f"Input Error: {e}")
+
+# Display results if available
+if st.session_state["results"]:
+    results = st.session_state["results"]
+    st.write("### Predicted Maintenance Range:")
+    st.write(f"**Minimum Monthly Maintenance:** ${results['min_maintenance']}")
+    st.write(f"**Maximum Monthly Maintenance:** ${results['max_maintenance']}")
+
+    st.markdown("**Disclaimer:** The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
+
+    # Add a feedback section for user evaluation with persistence
+    st.write("### Is the Predicted Maintenance Acceptable?")
+    if "feedback" not in st.session_state:
+        st.session_state["feedback"] = None
+
+    col1, col2 = st.columns(2)
+    if st.session_state["feedback"] == "👍":
+        col1.button("👍 Yes", disabled=True)
+        col1.success("Thank you for your feedback! We're glad the prediction met your expectations.")
+    else:
+        if col1.button("👍 Yes"):
+            st.session_state["feedback"] = "👍"
+
+    if st.session_state["feedback"] == "👎":
+        col2.button("👎 No", disabled=True)
+        col2.warning("Thank you for your feedback! We'll use this to improve our predictions.")
+    else:
+        if col2.button("👎 No"):
+            st.session_state["feedback"] = "👎"
 
 # Additional styling for the feedback buttons
 st.markdown(
