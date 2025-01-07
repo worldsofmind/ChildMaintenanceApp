@@ -32,6 +32,9 @@ gb_model = GradientBoostingRegressor(
     n_estimators=300,  # Increase the number of trees
     learning_rate=0.05,  # Reduce learning rate for smoother convergence
     max_depth=5,  # Increase depth for better capturing relationships
+    subsample=0.8,  # Use a fraction of the data for training each tree
+    min_samples_split=10,  # Minimum samples required to split a node
+    min_samples_leaf=5,  # Minimum samples in leaf nodes
     random_state=42
 )
 gb_model.fit(X_train, y_train)
@@ -68,7 +71,8 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     # Predict maintenance using Gradient Boosting
     base_maintenance = gb_model.predict(input_data_scaled)[0]
 
-    # Calculate a range for min and max maintenance (e.g., +/- 10%)
+    # Apply scaling and limits to predictions
+    base_maintenance = max(100, min(base_maintenance, 1000))  # Limit predictions to realistic range
     min_maintenance = base_maintenance * 0.9
     max_maintenance = base_maintenance * 1.1
 
