@@ -137,16 +137,14 @@ if st.session_state["results"]:
     with col1:
         if st.session_state["feedback"] == "👍":
             st.success("Thank you for your feedback! We're glad the prediction met your expectations.")
-        else:
-            if st.button("👍 Yes", key="yes_button"):
-                st.session_state["feedback"] = "👍"
+        elif st.button("👍 Yes", key="yes_button"):
+            st.session_state["feedback"] = "👍"
 
     with col2:
         if st.session_state["feedback"] == "👎":
             st.warning("Thank you for your feedback! We'll use this to improve our predictions.")
-        else:
-            if st.button("👎 No", key="no_button"):
-                st.session_state["feedback"] = "👎"
+        elif st.button("👎 No", key="no_button"):
+            st.session_state["feedback"] = "👎"
 
 # Additional styling for the feedback buttons
 st.markdown(
