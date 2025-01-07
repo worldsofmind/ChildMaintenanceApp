@@ -27,8 +27,13 @@ X_scaled = scaler.fit_transform(X)
 # Split data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-# Train the Gradient Boosting model
-gb_model = GradientBoostingRegressor(random_state=42)
+# Train the Gradient Boosting model with hyperparameter tuning
+gb_model = GradientBoostingRegressor(
+    n_estimators=300,  # Increase the number of trees
+    learning_rate=0.05,  # Reduce learning rate for smoother convergence
+    max_depth=5,  # Increase depth for better capturing relationships
+    random_state=42
+)
 gb_model.fit(X_train, y_train)
 
 # Evaluate the model
@@ -133,6 +138,11 @@ st.markdown(
             cursor: pointer;
             border-radius: 5px;
         }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
     </style>
     """,
     unsafe_allow_html=True
