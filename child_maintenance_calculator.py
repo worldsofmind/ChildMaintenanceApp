@@ -28,7 +28,7 @@ def calculate_child_maintenance(father_income, mother_income, children_ages):
     min_maintenance = sum(low_amounts)
     max_maintenance = sum(high_amounts)
 
-    return round(min_maintenance, 2), round(max_maintenance, 2), total_income, low_percentage, high_percentage, base_per_child, max_per_child
+    return round(min_maintenance, 2), round(max_maintenance, 2), total_income, low_percentage, high_percentage
 
 # Streamlit UI
 st.title("Child Maintenance Calculator")
@@ -53,19 +53,18 @@ if st.sidebar.button("Calculate"):
         if not children_ages:
             st.error("No eligible children provided. Please check the ages entered.")
         else:
-            min_maintenance, max_maintenance, total_income, low_percentage, high_percentage, base_per_child, max_per_child = calculate_child_maintenance(
+            min_maintenance, max_maintenance, total_income, low_percentage, high_percentage = calculate_child_maintenance(
                 father_income, mother_income, children_ages
             )
 
-            st.write(f"### Maintenance Range:")
-            st.write(f"**Minimum Maintenance:** ${min_maintenance}")
-            st.write(f"**Maximum Maintenance:** ${max_maintenance}")
+            st.write(f"### Monthly Maintenance Range:")
+            st.write(f"**Minimum Monthly Maintenance:** ${min_maintenance}")
+            st.write(f"**Maximum Monthly Maintenance:** ${max_maintenance}")
             st.write(f"**Total Income:** ${total_income}")
             st.write(f"**Percentage Range for Maintenance:** {low_percentage * 100}% - {high_percentage * 100}%")
-            st.write(f"**Base Maintenance per Child:** ${base_per_child} - ${max_per_child}")
 
             # Optional: Add a download button for results
-            download_data = f"Minimum Maintenance: ${min_maintenance}\nMaximum Maintenance: ${max_maintenance}\nTotal Income: ${total_income}\nPercentage Range for Maintenance: {low_percentage * 100}% - {high_percentage * 100}%"
+            download_data = f"Minimum Monthly Maintenance: ${min_maintenance}\nMaximum Monthly Maintenance: ${max_maintenance}\nTotal Income: ${total_income}\nPercentage Range for Maintenance: {low_percentage * 100}% - {high_percentage * 100}%"
 
             st.download_button(
                 label="Download Results",
