@@ -88,9 +88,9 @@ st.sidebar.write("Eligible children include:")
 st.sidebar.write("- Biological children")
 st.sidebar.write("- Adopted children")
 st.sidebar.write("- Non-biological children accepted as part of the family, such as stepchildren. Evidence of acceptance may include:")
-st.sidebar.write(" - Changing the child’s surname")
-st.sidebar.write(" - The child calling the non-parent 'dad' or 'mum'")
-st.sidebar.write(" - Paying for the child’s expenses")
+st.sidebar.write("  - Changing the child’s surname")
+st.sidebar.write("  - The child calling the non-parent 'dad' or 'mum'")
+st.sidebar.write("  - Paying for the child’s expenses")
 
 children_ages = []
 st.sidebar.write("Enter the ages of each child:")
@@ -155,11 +155,17 @@ if st.session_state["results"]:
 # Add link to legal clinics
 st.markdown("For legal advice, please visit the [List of Legal Clinics](https://example.com/legal-clinics).")
 
-# Additional styling for the feedback buttons (Corrected Indentation)
-st.markdown("""
-<style>
-  .stButton > button {
-    margin: 10px;
-  }
-</style>
-""")
+# Additional styling for the feedback buttons
+st.markdown(
+    """
+    <style>
+        .stButton > button {
+            margin: 10px;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
