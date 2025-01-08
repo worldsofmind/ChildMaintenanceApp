@@ -89,6 +89,16 @@ father_income = st.sidebar.number_input("Father's Monthly Income ($)", min_value
 mother_income = st.sidebar.number_input("Mother's Monthly Income ($)", min_value=0, step=100, format="%d", help="Enter the mother's monthly income.")
 num_children = st.sidebar.number_input("Number of Eligible Children", min_value=1, step=1, help="Enter the number of children eligible for maintenance.")
 
+# Definition of eligible children
+st.sidebar.markdown("**Definition of Eligible Children:**")
+st.sidebar.write("Eligible children include:")
+st.sidebar.write("- Biological children")
+st.sidebar.write("- Adopted children")
+st.sidebar.write("- Non-biological children accepted as part of the family, such as stepchildren. Evidence of acceptance may include:")
+st.sidebar.write("  - Changing the child’s surname")
+st.sidebar.write("  - The child calling the non-parent 'dad' or 'mum'")
+st.sidebar.write("  - Paying for the child’s expenses")
+
 # Intuitive input for children's ages with validation
 children_ages = []
 st.sidebar.write("Enter the ages of each child:")
@@ -125,14 +135,15 @@ if st.sidebar.button("Calculate"):
 if st.session_state["results"]:
     results = st.session_state["results"]
     st.write("### Predicted Maintenance Range:")
-    st.write(f"**Minimum Monthly Maintenance:** ${results['min_maintenance']}")
-    st.write(f"**Maximum Monthly Maintenance:** ${results['max_maintenance']}")
+    st.write(f"**Minimum Monthly Maintenance (for all children combined):** ${results['min_maintenance']}")
+    st.write(f"**Maximum Monthly Maintenance (for all children combined):** ${results['max_maintenance']}")
 
     st.markdown("**Disclaimer:** The predicted maintenance range is an estimate based on provided inputs and should not be considered as legal or financial advice. Consult a professional for accurate guidance.")
 
     # Add a feedback section for user evaluation with persistence
     st.write("### Is the Predicted Maintenance Acceptable?")
 
+    feedback_reason = ""
     col1, col2 = st.columns(2)
     with col1:
         if st.session_state["feedback"] == "👍":
@@ -146,17 +157,20 @@ if st.session_state["results"]:
         elif st.button("👎 No", key="no_button"):
             st.session_state["feedback"] = "👎"
 
+    # Allow users to provide feedback reasons
+    if st.session_state["feedback"] is not None:
+        feedback_reason = st.text_area("Please share why you found the result acceptable or not:")
+
+    # Placeholder: Demonstrating feedback email routing
+    if feedback_reason:
+        st.write("Your feedback has been recorded and will be reviewed.")
+
+# Add link to legal clinics
+st.markdown("For legal advice, please visit the [List of Legal Clinics](https://example.com/legal-clinics).")
+
 # Additional styling for the feedback buttons
 st.markdown(
     """
     <style>
         .stButton > button {
-            margin: 5px 0;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+            margin:
